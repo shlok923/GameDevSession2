@@ -41,15 +41,14 @@ public class Enemy : MonoBehaviour
         if (zombie == gameObject)
         {
             animator.SetTrigger("hit");
-            PauseMovement(1.5f);
+            StartCoroutine(PauseMovement(1.5f));
             health -= 10;
 
             if (health <= 0)
             {
                 Debug.Log("DED");
                 animator.SetTrigger("die");
-                PauseMovement(3f);
-                Die();
+                StartCoroutine(Die());
             }
 
         }
@@ -81,8 +80,9 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
         {
             animator.SetTrigger("attack");
-            PauseMovement(1f);
+            StartCoroutine(PauseMovement(1f));
         }
+        player.HandleDamageAndDeath(10);
 
 
     }
@@ -100,8 +100,10 @@ public class Enemy : MonoBehaviour
         Bullet.OnEnemyHit -= HandleEnemyHit;
     }
 
-    private void Die()
+    private IEnumerator Die()
     {
+        
+        yield return new WaitForSeconds(3f);
         Destroy(gameObject);
     }
 
